@@ -81,7 +81,8 @@ def test_errortest():
     # run gfortran7-uzf
     argv = [os.path.join('..', 'bin', 'gfortran7-uzf')]
     buff, ierr = run_command(argv, pth)
-    msg = '\nERROR: {} did not terminate normally'.format(argv[0])
+    msg = '\nERROR: {} did not terminate normally\n\n'.format(argv[0])
+    msg += '{}'.format(buff)
     assert 'Normal termination' in buff, msg
 
 

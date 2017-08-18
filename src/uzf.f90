@@ -38,7 +38,6 @@ module UzfModule
     ! -- methods specific for uzf
     procedure, private :: uzf_allocate_scalars
     procedure, private :: pakdata_rd
-    procedure, private :: pakdata_pr
 
   end type UzfType
 
@@ -84,9 +83,6 @@ contains
 !
 !   --Read uzf cell properties and set values
     call this%pakdata_rd()
-    !
-    ! -- print cell data
-    call this%pakdata_pr()
     !
     ! -- return
     return
@@ -154,24 +150,6 @@ contains
     ! -- return
     return
   end subroutine pakdata_rd
-
-  subroutine pakdata_pr(this)
-! ******************************************************************************
-! pakdata_pr -- Read UZF cell properties and set them for UzfKinematic type.
-! ******************************************************************************
-! ------------------------------------------------------------------------------
-    ! -- dummy
-    class(UzfType) :: this
-    ! -- local
-    integer(kind=4) :: i
-! ------------------------------------------------------------------------------
-!
-    do i = 1, this%nodes
-    end do
-    !
-    ! -- return
-    return
-  end subroutine pakdata_pr
 
   subroutine uzf_allocate_scalars(this)
 ! ******************************************************************************
