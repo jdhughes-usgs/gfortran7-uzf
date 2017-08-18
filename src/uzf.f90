@@ -200,6 +200,7 @@ contains
     do i = 1, this%nodes+1
         this%uzfobj => this%elements(i)%obj
         call this%uzfobj%dealloc()
+        nullify(this%elements(i)%obj)
     end do
     nullify(this%uzfobj)
     deallocate(this%elements)
