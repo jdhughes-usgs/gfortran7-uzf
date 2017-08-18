@@ -65,6 +65,7 @@
 
     type:: AType
 
+      !type(BType), pointer, dimension(:) :: elements => null()
       type(bcontainer), pointer, dimension(:) :: elements => null()
       type(BType), pointer  :: bobj => null()
       !
@@ -109,10 +110,11 @@
         do i = 1, this%nval1
           allocate(bobj)
           this%elements(i)%obj => bobj
-        enddo
+        end do
         !
         ! -- Initialize each object
         do i = 1, this%nval1
+            !this%bobj => this%elements(i)
             this%bobj => this%elements(i)%obj
             call this%bobj%init(i,this%nval2)
         end do
@@ -202,7 +204,11 @@
         write(*,*) 'in a_da'
         !
         ! -- deallocate uzf objects
-        do i = 1, this%nval1+1
+        !do i = 1, this%nval1
+        !    this%bobj => this%elements(i)
+        !    call this%bobj%dealloc()
+        !end do
+        do i = 1, this%nval1
             this%bobj => this%elements(i)%obj
             call this%bobj%dealloc()
             nullify(this%elements(i)%obj)
