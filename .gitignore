@@ -1,12 +1,15 @@
 *.DS_Store
 *.exe
 *.lib
+*.o
 *.obj
 *.suo
 *.u2d
 *.pdb
 *.user
 *_genmod.f90
+
+.idea/
 
 Debug/
 Release/

@@ -15,5 +15,7 @@ program main
   write(*,*) 'deallocating uzf'
   deallocate(uzf)
   
+  write(*,*) 'Normal termination.'
+  
 end program main
 

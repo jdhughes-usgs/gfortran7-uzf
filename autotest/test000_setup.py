@@ -79,10 +79,10 @@ def test_errortest():
     pth = './'
     
     # run gfortran7-uzf
-    argv = [os.path.join('..', 'bin','gfortran7-uzf')]
+    argv = [os.path.join('..', 'bin', 'gfortran7-uzf')]
     buff, ierr = run_command(argv, pth)
-    msg = '\nERROR {}: could not run {}'.format(ierr, argv[0])
-    assert ierr == 0, buff + msg
+    msg = '\nERROR: {} did not terminate normally'.format(argv[0])
+    assert 'Normal termination' in buff, msg
 
 
 def build(srcdir, srcdir2, target, starget, extrafiles=None):

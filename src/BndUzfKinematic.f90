@@ -1,57 +1,55 @@
 module UzfKinematicModule
-  
-  use KindModule, only: DP, I4B
 
   implicit none
   private
   public :: UzfKinematicType
   
   type :: UzfKinematicType
-      integer(I4B), pointer :: ipos                  => null()
-      real(DP), pointer :: thtr                      => null()
-      real(DP), pointer :: thts                      => null()
-      real(DP), pointer :: thti                      => null()
-      real(DP), pointer :: eps                       => null()
-      real(DP), pointer :: extwc                     => null()
-      real(DP), pointer :: ha                        => null()
-      real(DP), pointer :: hroot                     => null()
-      real(DP), pointer :: rootact                   => null()
-      real(DP), pointer :: etact                     => null()
-      real(DP), dimension(:), pointer :: uzspst      => null()
-      real(DP), dimension(:), pointer :: uzthst      => null()
-      real(DP), dimension(:), pointer :: uzflst      => null()
-      real(DP), dimension(:), pointer :: uzdpst      => null()
-      integer(I4B), pointer :: nwavst                => null()
-      real(DP), pointer :: uzolsflx                  => null()
-      real(DP), pointer :: uzstor                    => null()
-      real(DP), pointer :: delstor                   => null()
-      real(DP), pointer :: totflux                   => null()
-      real(DP), pointer :: vflow                     => null()
-      integer(I4B), pointer :: nwav, ntrail          => null()
-      real(DP), pointer :: sinf                      => null()
-      real(DP), pointer :: finf                      => null()
-      real(DP), pointer :: pet                       => null()
-      real(DP), pointer :: petmax                    => null()
-      real(DP), pointer :: extdp                     => null()
-      real(DP), pointer :: extdpuz                   => null()
-      real(DP), pointer :: finf_rej                  => null()
-      real(DP), pointer :: gwet                      => null()
-      real(DP), pointer :: uzfarea                   => null()
-      real(DP), pointer :: cellarea                  => null()
-      real(DP), pointer :: celtop                    => null()
-      real(DP), pointer :: celbot                    => null()
-      real(DP), pointer :: landtop                   => null()
-      real(DP), pointer :: cvlm1                     => null()
-      real(DP), pointer :: watab                     => null()
-      real(DP), pointer :: watabold                  => null()
-      real(DP), pointer :: vks                       => null()
-      real(DP), pointer :: surfdep                   => null()
-      real(DP), pointer :: surflux                   => null()
-      real(DP), pointer :: surfluxbelow              => null()
-      real(DP), pointer :: surfseep                  => null()
-      real(DP), pointer :: gwpet                     => null()
-      integer(I4B), pointer :: landflag              => null()
-      integer(I4B), pointer :: ivertcon               => null()
+      integer(kind=4), pointer :: ipos                  => null()
+      real(kind=8), pointer :: thtr                      => null()
+      real(kind=8), pointer :: thts                      => null()
+      real(kind=8), pointer :: thti                      => null()
+      real(kind=8), pointer :: eps                       => null()
+      real(kind=8), pointer :: extwc                     => null()
+      real(kind=8), pointer :: ha                        => null()
+      real(kind=8), pointer :: hroot                     => null()
+      real(kind=8), pointer :: rootact                   => null()
+      real(kind=8), pointer :: etact                     => null()
+      real(kind=8), dimension(:), pointer :: uzspst      => null()
+      real(kind=8), dimension(:), pointer :: uzthst      => null()
+      real(kind=8), dimension(:), pointer :: uzflst      => null()
+      real(kind=8), dimension(:), pointer :: uzdpst      => null()
+      integer(kind=4), pointer :: nwavst                => null()
+      real(kind=8), pointer :: uzolsflx                  => null()
+      real(kind=8), pointer :: uzstor                    => null()
+      real(kind=8), pointer :: delstor                   => null()
+      real(kind=8), pointer :: totflux                   => null()
+      real(kind=8), pointer :: vflow                     => null()
+      integer(kind=4), pointer :: nwav, ntrail          => null()
+      real(kind=8), pointer :: sinf                      => null()
+      real(kind=8), pointer :: finf                      => null()
+      real(kind=8), pointer :: pet                       => null()
+      real(kind=8), pointer :: petmax                    => null()
+      real(kind=8), pointer :: extdp                     => null()
+      real(kind=8), pointer :: extdpuz                   => null()
+      real(kind=8), pointer :: finf_rej                  => null()
+      real(kind=8), pointer :: gwet                      => null()
+      real(kind=8), pointer :: uzfarea                   => null()
+      real(kind=8), pointer :: cellarea                  => null()
+      real(kind=8), pointer :: celtop                    => null()
+      real(kind=8), pointer :: celbot                    => null()
+      real(kind=8), pointer :: landtop                   => null()
+      real(kind=8), pointer :: cvlm1                     => null()
+      real(kind=8), pointer :: watab                     => null()
+      real(kind=8), pointer :: watabold                  => null()
+      real(kind=8), pointer :: vks                       => null()
+      real(kind=8), pointer :: surfdep                   => null()
+      real(kind=8), pointer :: surflux                   => null()
+      real(kind=8), pointer :: surfluxbelow              => null()
+      real(kind=8), pointer :: surfseep                  => null()
+      real(kind=8), pointer :: gwpet                     => null()
+      integer(kind=4), pointer :: landflag              => null()
+      integer(kind=4), pointer :: ivertcon               => null()
   contains
       procedure :: init
       procedure :: dealloc
@@ -72,8 +70,8 @@ module UzfKinematicModule
    !modules
    !arguments
    class(UzfKinematicType) :: this
-   integer(I4B), intent(in) :: ipos
-   integer(I4B), intent(in) :: nwav
+   integer(kind=4), intent(in) :: ipos
+   integer(kind=4), intent(in) :: nwav
 ! ------------------------------------------------------------------------------
     allocate(this%uzdpst(nwav))
     allocate(this%uzthst(nwav))

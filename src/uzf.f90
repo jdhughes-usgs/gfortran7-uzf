@@ -1,8 +1,6 @@
 ! -- Uzf module
 module UzfModule
 !
-  use KindModule, only: DP, I4B
-
   use UzfKinematicModule
 
   implicit none
@@ -16,9 +14,9 @@ module UzfModule
 
   type:: UzfType
     ! output integers
-    integer(I4B), pointer :: iprwcont => null()
-    integer(I4B), pointer :: iwcontout => null()
-    integer(I4B), pointer :: ibudgetout => null()
+    integer(kind=4), pointer :: iprwcont => null()
+    integer(kind=4), pointer :: iwcontout => null()
+    integer(kind=4), pointer :: ibudgetout => null()
 
     type(uzfcontainer), pointer, dimension(:) :: elements    => null() !array of all the kinematic uzf objects
     type(UzfKinematicType), pointer           :: uzfobj      => null() !uzf kinematic object
@@ -26,10 +24,10 @@ module UzfModule
     
     !
     ! -- uzf data
-    integer(I4B), pointer                       :: nodes        => null() !cdl--(this should probably be maxbound)
-    integer(I4B), pointer                       :: nwav         => null()
-    integer(I4B), dimension(:), pointer         :: mfcellid     => null()
-    real(DP), dimension(:), pointer             :: appliedinf   => null()
+    integer(kind=4), pointer                       :: nodes        => null() !cdl--(this should probably be maxbound)
+    integer(kind=4), pointer                       :: nwav         => null()
+    integer(kind=4), dimension(:), pointer         :: mfcellid     => null()
+    real(kind=8), dimension(:), pointer             :: appliedinf   => null()
 
   contains
 
@@ -57,7 +55,7 @@ contains
     ! -- dummy
     class(UzfType), intent(inout) :: this
     ! -- local
-    integer(I4B) :: i
+    integer(kind=4) :: i
     type(UzfKinematicType), pointer :: uzfobj     
 ! ------------------------------------------------------------------------------
     !
@@ -106,7 +104,7 @@ contains
     ! -- dummy
     class(UzfType),   intent(inout) :: this
     ! -- local
-    integer (I4B) :: i
+    integer (kind=4) :: i
 ! ------------------------------------------------------------------------------
     !
     ! -- allocate uzf specific arrays
@@ -131,9 +129,9 @@ contains
     ! -- dummy
     class(UzfType) :: this
     ! -- local
-    integer(I4B) :: n
-    integer(I4B), dimension(:), allocatable :: rowmaxnnz
-    integer(I4B), dimension(:), allocatable :: nboundchk
+    integer(kind=4) :: n
+    integer(kind=4), dimension(:), allocatable :: rowmaxnnz
+    integer(kind=4), dimension(:), allocatable :: nboundchk
 ! ------------------------------------------------------------------------------
 !
     !
@@ -165,7 +163,7 @@ contains
     ! -- dummy
     class(UzfType) :: this
     ! -- local
-    integer(I4B) :: i
+    integer(kind=4) :: i
 ! ------------------------------------------------------------------------------
 !
     do i = 1, this%nodes
@@ -216,7 +214,7 @@ contains
     ! -- dummy
     class(UzfType) :: this
     ! -- locals
-    integer (I4B) :: i
+    integer (kind=4) :: i
     ! -- format
 ! ------------------------------------------------------------------------------
     !
