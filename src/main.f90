@@ -1,57 +1,57 @@
   module BModule
 
-  implicit none
-  private
-  public :: BType
+    implicit none
+    private
+    public :: BType
+  
+    type :: BType
+      integer(kind=4), pointer :: ipos => null()
+      integer(kind=4), pointer :: nval2 => null()
+      real(kind=8), dimension(:), pointer :: dval1 => null()
+    contains
+      procedure :: init
+      procedure :: dealloc
+    end type BType
 
-  type :: BType
-    integer(kind=4), pointer :: ipos => null()
-    integer(kind=4), pointer :: nval2 => null()
-    real(kind=8), dimension(:), pointer :: dval1 => null()
-  contains
-  procedure :: init
-  procedure :: dealloc
-  end type BType
+    contains
 
-  contains
-
-    subroutine init(this, ipos, nval2)
-      class(BType) :: this
-      integer(kind=4), intent(in) :: ipos
-      integer(kind=4), intent(in) :: nval2
-      !local
-      integer(kind=4) :: i
-      write(*,*) 'in BType_init ', ipos
-      !
-      ! -- allocate scalars and arrays
-      allocate(this%ipos)
-      allocate(this%nval2)
-      allocate(this%dval1(nval2))
-      !
-      ! -- initialize scalars and arrays
-      this%ipos = ipos
-      this%nval2 = nval2
-      do i = 1, nval2
-        this%dval1(i) = 0.0d0
-      end do
-    end subroutine init
-
-    subroutine dealloc(this)
-      class(BType) :: this
-      write(*,*) 'in BType_da ', this%ipos
-      !
-      ! -- deallocate
-      deallocate(this%ipos)
-      deallocate(this%nval2)
-      deallocate(this%dval1)
-      !
-      ! -- return
-      return
-    end subroutine dealloc
+      subroutine init(this, ipos, nval2)
+        class(BType) :: this
+        integer(kind=4), intent(in) :: ipos
+        integer(kind=4), intent(in) :: nval2
+        !local
+        integer(kind=4) :: i
+        write(*,*) 'in BType_init ', ipos
+        !
+        ! -- allocate scalars and arrays
+        allocate(this%ipos)
+        allocate(this%nval2)
+        allocate(this%dval1(nval2))
+        !
+        ! -- initialize scalars and arrays
+        this%ipos = ipos
+        this%nval2 = nval2
+        do i = 1, nval2
+          this%dval1(i) = 0.0d0
+        end do
+      end subroutine init
+  
+      subroutine dealloc(this)
+        class(BType) :: this
+        write(*,*) 'in BType_da ', this%ipos
+        !
+        ! -- deallocate
+        deallocate(this%ipos)
+        deallocate(this%nval2)
+        deallocate(this%dval1)
+        !
+        ! -- return
+        return
+      end subroutine dealloc
   end module BModule
   
   module AModule
-  !
+  
     use BModule
 
     implicit none
@@ -73,15 +73,15 @@
       integer(kind=4), pointer :: nval2 => null()
       integer(kind=4), dimension(:), pointer :: dval1 => null()
 
-    contains
-
-      procedure :: a_allocate_arrays
-      procedure :: a_ar
-      procedure :: a_da
-      !
-      ! -- methods specific for AType
-      procedure, private :: a_allocate_scalars
-      procedure, private :: a_rd
+      contains
+  
+        procedure :: a_allocate_arrays
+        procedure :: a_ar
+        procedure :: a_da
+        !
+        ! -- methods specific for AType
+        procedure, private :: a_allocate_scalars
+        procedure, private :: a_rd
 
     end type AType
 
@@ -116,8 +116,8 @@
             this%bobj => this%elements(i)%obj
             call this%bobj%init(i,this%nval2)
         end do
-    !
-    !   -- call rd
+        !
+        ! -- call rd
         call this%a_rd()
         !
         ! -- return
@@ -160,9 +160,9 @@
         !
         ! -- return
         return
-        end subroutine a_allocate_arrays
+      end subroutine a_allocate_arrays
 
-       subroutine a_rd(this)
+      subroutine a_rd(this)
         ! -- dummy
         class(AType) :: this
         ! -- local
@@ -191,7 +191,7 @@
         ! -- return
         return
       end subroutine a_rd
-    !
+
       subroutine a_da(this)
         ! -- dummy
         class(AType) :: this
@@ -221,7 +221,7 @@
         return
       end subroutine a_da
 
-    end module AModule
+  end module AModule
 
 
   program main
