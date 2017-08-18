@@ -2,17 +2,14 @@
 module UzfModule
 !
   use KindModule, only: DP, I4B
-  use ConstantsModule, only: DZERO, DEM6, DEM4, DEM2, DEM1, DHALF,              &
-                             DONE, DHUNDRED,                                    &
-                             LINELENGTH, LENFTYPE, LENPACKAGENAME,              &
-                             LENBOUNDNAME, LENBUDTXT, DNODATA,                  &
-                             NAMEDBOUNDFLAG, MAXCHARLEN,                        &
-                             DHNOFLO, DHDRY
-  use MemoryTypeModule, only: MemoryTSType
-  use MemoryManagerModule, only: mem_allocate, mem_reallocate, mem_setptr,      &
-                                 mem_deallocate
+
+  use UzfKinematicModule
 
   implicit none
+
+  type uzfcontainer
+    class(UzfKinematicType), pointer :: obj
+  end type uzfcontainer
 
   private
   public :: UzfType
@@ -22,9 +19,15 @@ module UzfModule
     integer(I4B), pointer :: iprwcont => null()
     integer(I4B), pointer :: iwcontout => null()
     integer(I4B), pointer :: ibudgetout => null()
+
+    type(uzfcontainer), pointer, dimension(:) :: elements    => null() !array of all the kinematic uzf objects
+    type(UzfKinematicType), pointer           :: uzfobj      => null() !uzf kinematic object
+
+    
     !
     ! -- uzf data
     integer(I4B), pointer                       :: nodes        => null() !cdl--(this should probably be maxbound)
+    integer(I4B), pointer                       :: nwav         => null()
     integer(I4B), dimension(:), pointer         :: mfcellid     => null()
     real(DP), dimension(:), pointer             :: appliedinf   => null()
 
@@ -54,7 +57,8 @@ contains
     ! -- dummy
     class(UzfType), intent(inout) :: this
     ! -- local
-    integer(I4B) :: i, n
+    integer(I4B) :: i
+    type(UzfKinematicType), pointer :: uzfobj     
 ! ------------------------------------------------------------------------------
     !
     ! -- Allocate scalars
@@ -62,9 +66,23 @@ contains
     !
     ! -- initialize nodes
     this%nodes = 10
+    this%nwav = 20
     !
     ! -- Allocate arrays in package superclass
     call this%uzf_allocate_arrays()
+    !
+    ! -- Allocate UZF objects plus one extra for work array
+    allocate(this%elements(this%nodes+1))
+    do i = 1, this%nodes + 1
+      allocate(uzfobj)
+      this%elements(i)%obj => uzfobj
+    enddo
+    !
+    ! -- Initialize each UZF object
+    do i = 1, this%nodes+1
+        this%uzfobj => this%elements(i)%obj
+        call this%uzfobj%init(i,this%nwav)
+    end do
 !
 !   --Read uzf cell properties and set values
     call this%pakdata_rd()
@@ -89,18 +107,16 @@ contains
     class(UzfType),   intent(inout) :: this
     ! -- local
     integer (I4B) :: i
-    integer (I4B) :: j
-    integer (I4B) :: ipos
 ! ------------------------------------------------------------------------------
     !
     ! -- allocate uzf specific arrays
-    call mem_allocate(this%mfcellid, this%nodes, 'MFCELLID', 'apple')
-    call mem_allocate(this%appliedinf, this%nodes, 'APPLIEDINF', 'apple')
+    allocate(this%mfcellid(this%nodes))
+    allocate(this%appliedinf(this%nodes))
     !
     ! -- initialize arrays
     do i = 1, this%nodes
       this%mfcellid(i) = 0
-      this%appliedinf(i) = DZERO
+      this%appliedinf(i) = 0.0d0
     end do
     !
     ! -- return
@@ -111,18 +127,11 @@ contains
 ! ******************************************************************************
 ! pakdata_rd -- Read UZF cell properties and set them for UzfKinematic type.
 ! ******************************************************************************
-    use InputOutputModule, only: urword
-    use SimModule, only: ustop, store_error, count_errors
 ! ------------------------------------------------------------------------------
     ! -- dummy
     class(UzfType) :: this
     ! -- local
-    character(len=LINELENGTH) :: line, errmsg, cellid
-    integer(I4B) :: ierr, i, n, landflag, ivertcon
-    integer(I4B) :: j
-    integer(I4B) :: ic
-    logical :: isfound, endOfBlock
-    real(DP) :: surfdep,vks,thtr,thts,thti,eps,hgwf
+    integer(I4B) :: n
     integer(I4B), dimension(:), allocatable :: rowmaxnnz
     integer(I4B), dimension(:), allocatable :: nboundchk
 ! ------------------------------------------------------------------------------
@@ -140,16 +149,6 @@ contains
       nboundchk(n) = 0
     end do
     !
-    ! -- initialize variables
-    surfdep = DZERO
-    vks = DZERO
-    thtr = DZERO
-    thts = DZERO
-    thti = DZERO
-    eps = DZERO
-    landflag = 0
-    ivertcon = 0
-    !
     ! -- deallocate local variables
     deallocate(rowmaxnnz)
     deallocate(nboundchk)
@@ -166,16 +165,11 @@ contains
     ! -- dummy
     class(UzfType) :: this
     ! -- local
-    character (len=20) :: cellids, cellid
-    character(len=LINELENGTH) :: line, linesep
-    character(len=16) :: text
     integer(I4B) :: i
-    integer(I4B) :: n
-    integer(I4B) :: node
-    integer(I4B) :: iloc
-    real(DP) :: q
 ! ------------------------------------------------------------------------------
 !
+    do i = 1, this%nodes
+    end do
     !
     ! -- return
     return
@@ -190,22 +184,23 @@ contains
 ! ------------------------------------------------------------------------------
     ! -- modules
 
-    use MemoryManagerModule, only: mem_allocate
     ! -- dummy
     class(UzfType) :: this
 ! ------------------------------------------------------------------------------
     !
     ! -- allocate uzf specific scalars
-    call mem_allocate(this%iprwcont, 'IPRWCONT', 'orange')
-    call mem_allocate(this%iwcontout, 'IWCONTOUT', 'orange')
-    call mem_allocate(this%ibudgetout, 'IBUDGETOUT', 'orange')
-    call mem_allocate(this%nodes, 'NODES', 'orange')
+    allocate(this%iprwcont)
+    allocate(this%iwcontout)
+    allocate(this%ibudgetout)
+    allocate(this%nodes)
+    allocate(this%nwav)
     !
     ! -- initialize scalars
     this%iprwcont = 0
     this%iwcontout = 0
     this%ibudgetout = 0
     this%nodes = 0
+    this%nwav = 0
     !
     ! -- return
     return
@@ -218,7 +213,6 @@ contains
 !
 !    SPECIFICATIONS:
 ! ------------------------------------------------------------------------------
-    use MemoryManagerModule, only: mem_deallocate
     ! -- dummy
     class(UzfType) :: this
     ! -- locals
@@ -226,15 +220,24 @@ contains
     ! -- format
 ! ------------------------------------------------------------------------------
     !
+    ! -- deallocate uzf objects
+    do i = 1, this%nodes+1
+        this%uzfobj => this%elements(i)%obj
+        call this%uzfobj%dealloc()
+    end do
+    nullify(this%uzfobj)
+    deallocate(this%elements)
+    !
     ! -- deallocate scalars
-    call mem_deallocate(this%iprwcont)
-    call mem_deallocate(this%iwcontout)
-    call mem_deallocate(this%ibudgetout)
-    call mem_deallocate(this%nodes)
+    deallocate(this%iprwcont)
+    deallocate(this%iwcontout)
+    deallocate(this%ibudgetout)
+    deallocate(this%nodes)
+    deallocate(this%nwav)
     !
     ! -- deallocate arrays
-    call mem_deallocate(this%mfcellid)
-    call mem_deallocate(this%appliedinf)
+    deallocate(this%mfcellid)
+    deallocate(this%appliedinf)
     !
     ! -- Return
     return

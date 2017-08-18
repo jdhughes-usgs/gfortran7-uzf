@@ -1,7 +1,6 @@
 program main
   use UzfModule
   implicit none
-  integer :: i
   type(UzfType), pointer :: uzf => null()
   
   write(*,*) 'allocating uzf'
