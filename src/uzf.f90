@@ -14,9 +14,9 @@ module UzfModule
 
   type:: UzfType
     ! output integers
-    integer(kind=4), pointer :: iprwcont => null()
-    integer(kind=4), pointer :: iwcontout => null()
-    integer(kind=4), pointer :: ibudgetout => null()
+    !integer(kind=4), pointer :: iprwcont => null()
+    !integer(kind=4), pointer :: iwcontout => null()
+    !integer(kind=4), pointer :: ibudgetout => null()
 
     type(uzfcontainer), pointer, dimension(:) :: elements    => null() !array of all the kinematic uzf objects
     type(UzfKinematicType), pointer           :: uzfobj      => null() !uzf kinematic object
@@ -27,7 +27,7 @@ module UzfModule
     integer(kind=4), pointer                       :: nodes        => null() !cdl--(this should probably be maxbound)
     integer(kind=4), pointer                       :: nwav         => null()
     integer(kind=4), dimension(:), pointer         :: mfcellid     => null()
-    real(kind=8), dimension(:), pointer             :: appliedinf   => null()
+    !real(kind=8), dimension(:), pointer             :: appliedinf   => null()
 
   contains
 
@@ -95,8 +95,6 @@ contains
 !
 !    SPECIFICATIONS:
 ! ------------------------------------------------------------------------------
-    ! -- modules
-    !use MemoryManagerModule, only: mem_allocate
     ! -- dummy
     class(UzfType),   intent(inout) :: this
     ! -- local
@@ -105,13 +103,13 @@ contains
     !
     ! -- allocate uzf specific arrays
     allocate(this%mfcellid(this%nodes))
-    allocate(this%appliedinf(this%nodes))
-    !
-    ! -- initialize arrays
-    do i = 1, this%nodes
-      this%mfcellid(i) = 0
-      this%appliedinf(i) = 0.0d0
-    end do
+    !allocate(this%appliedinf(this%nodes))
+    !!
+    !! -- initialize arrays
+    !do i = 1, this%nodes
+    !  this%mfcellid(i) = 0
+    !  this%appliedinf(i) = 0.0d0
+    !end do
     !
     ! -- return
     return
@@ -165,16 +163,16 @@ contains
 ! ------------------------------------------------------------------------------
     !
     ! -- allocate uzf specific scalars
-    allocate(this%iprwcont)
-    allocate(this%iwcontout)
-    allocate(this%ibudgetout)
+    !allocate(this%iprwcont)
+    !allocate(this%iwcontout)
+    !allocate(this%ibudgetout)
     allocate(this%nodes)
     allocate(this%nwav)
     !
     ! -- initialize scalars
-    this%iprwcont = 0
-    this%iwcontout = 0
-    this%ibudgetout = 0
+    !this%iprwcont = 0
+    !this%iwcontout = 0
+    !this%ibudgetout = 0
     this%nodes = 0
     this%nwav = 0
     !
@@ -206,15 +204,15 @@ contains
     deallocate(this%elements)
     !
     ! -- deallocate scalars
-    deallocate(this%iprwcont)
-    deallocate(this%iwcontout)
-    deallocate(this%ibudgetout)
+    !deallocate(this%iprwcont)
+    !deallocate(this%iwcontout)
+    !deallocate(this%ibudgetout)
     deallocate(this%nodes)
     deallocate(this%nwav)
-    !
+    !!
     ! -- deallocate arrays
     deallocate(this%mfcellid)
-    deallocate(this%appliedinf)
+    !deallocate(this%appliedinf)
     !
     ! -- Return
     return
